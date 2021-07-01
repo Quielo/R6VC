@@ -1,14 +1,21 @@
 require('dotenv').config();
 const express = require("express");
 const http = require("http");
+const cors = require("cors");
 const app = express();
+app.use(cors({
+    origin: "localhost:3000", //servidor que deseas que consuma o (*) en caso que sea acceso libre
+    credentials: true
+}));
 const server = http.createServer(app);
 const socket = require("socket.io");
 const io = socket(server);
 
+
 const users = {};
 
 const socketToRoom = {};
+
 
 io.on('connection', socket => {
     socket.on("join room", roomID => {

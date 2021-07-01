@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase": "^8.6.8",
     "react": "^17.0.2",
@@ -13,11 +14,14 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "simple-peer": "^9.11.0",
+    "socket.io": "^4.1.2",
     "socket.io-client": "^4.1.2",
     "styled-components": "^5.3.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
+    "run": "node server.js",
+    "server": "nodemon server.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
