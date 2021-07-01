@@ -1,16 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import App from './App';
 import Main from './components/test-chat/test-chat'
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import {io as IO}from "socket.io-client";
+import Peer from "simple-peer";
+import styled from "styled-components";
 
 
 ReactDOM.render(
-    <Main />,
+    <App />,
   document.getElementById('root')
 );
 
+/*
 const firebaseConfig = {
   apiKey: "AIzaSyB5pFNHqiZt87gkrHpsR6ZDHwMhTK1SARs",
   authDomain: "video-conference-1eb6b.firebaseapp.com",
@@ -161,4 +166,4 @@ offerCandidates.onSnapshot((snapshot) => {
     }
   });
 });
-};
+};*/
