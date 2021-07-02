@@ -24,23 +24,23 @@
   background-color: #ffffff;
   box-shadow: 10px 10px 5px grey;
   border-radius: 20px;
-}
-.welcomemessage {
-  position: absolute;
-  width: 177px;
-  height: 24px;
-  left: 138px;
-  top: 0px;
-  text-align: center;
+  .welcomemessage {
+    position: absolute;
+    width: 177px;
+    height: 24px;
+    left: 138px;
+    top: 0px;
+    text-align: center;
 
-  font-family: roboto;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 23px;
-  /* identical to box height */
+    font-family: roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 23px;
+    /* identical to box height */
 
-  color: rgba(0, 0, 0, 0.87);
+    color: rgba(0, 0, 0, 0.87);
+  }
 }
 .enterName {
   position: absolute;
@@ -73,6 +73,98 @@
 .okButton:hover {
   background-color: #c57714;
 }
+
+.linkPopUp {
+  z-index: 1;
+  position: absolute;
+  width: 640px;
+  height: 216px;
+  left: 363px;
+  top: 84px;
+
+  background: #fafafa;
+  box-shadow: 0px 15px 12px rgba(0, 0, 0, 0.22),
+    0px 19px 38px rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+}
+.permission {
+  position: absolute;
+  width: 112px;
+  height: 24px;
+  left: 20px;
+  top: -7px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 23px;
+
+  color: rgba(0, 0, 0, 0.87);
+}
+.instructions {
+  position: absolute;
+  width: 542px;
+  height: 72px;
+  left: 52px;
+  top: 41px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  /* or 150% */
+
+  color: rgba(0, 0, 0, 0.541327);
+}
+.urlContainer {
+  position: absolute;
+  width: 530px;
+  height: 57px;
+  left: 52px;
+  top: 135px;
+
+  background: #c4c4c4;
+  .url {
+    position: absolute;
+    width: 125px;
+    height: 24px;
+    left: 196px;
+    top: 0px;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 24px;
+    /* identical to box height, or 133% */
+
+    display: flex;
+    align-items: center;
+
+    color: #000000;
+  }
+}
+.copyIcon {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: 492px;
+  top: 15px;
+  transform: matrix(1, 0, 0, -1, 0, 0);
+  background-image: url("./images/copy_icon.png");
+}
+.copyIcon:hover {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: 492px;
+  top: 15px;
+  transform: matrix(1, 0, 0, -1, 0, 0);
+  background-image: url("./images/copygreen.png");
+}
+
 .roomcontainer {
   position: absolute;
   width: 1227px;
@@ -170,7 +262,7 @@
   height: 31px;
   left: 0px;
   top: 181px;
-
+  border-radius: 20px;
   background: #000000;
 }
 .username {
