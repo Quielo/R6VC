@@ -1,4 +1,3 @@
-import styles from './room.module.scss';
 import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
@@ -20,13 +19,13 @@ const StyledVideo = styled.video`
 
 const Video = (props) => {
     const ref = useRef();
-    
+
     useEffect(() => {
         props.peer.on("stream", stream => {
             ref.current.srcObject = stream;
         })
     }, []);
-    
+
     return (
         <StyledVideo playsInline autoPlay ref={ref} />
     );
@@ -38,8 +37,8 @@ const videoConstraints = {
     width: window.innerWidth / 2
 };
 
-function Room(props) {
-  const [peers, setPeers] = useState([]);
+const Room = (props) => {
+    const [peers, setPeers] = useState([]);
     const socketRef = useRef();
     const userVideo = useRef();
     const peersRef = useRef([]);
@@ -112,49 +111,15 @@ function Room(props) {
     }
 
     return (
-      <div className={styles.room}>
-        <div className={styles.welcomecontainer}>
-          <p className={styles.welcomemessage}>
-            {" "}
-            Welcome!
-            <br />
-            <span className={styles.enterName}>
-              Enter your name o nickname to start!
-              <span />
-            </span>{" "}
-            <br />
-            <br />
-            <br />
-            <br />
-            <input type="text" className={styles.inputNickname}></input>
-          </p>
-          <button id="buttonOk" className={styles.okButton}>
-            OK!
-          </button>
-        </div>
-  
-        <div className={styles.roomcontainer}>
-          <div className={styles.roomname}>
-            <p>ROOM NAME</p>
-          </div>
-          <div className={styles.logodown}></div>
-          <div className={styles.mic}></div>
-          <div className={styles.arrow}></div>
-          <div className={styles.userslist}></div>
-          <Container>
+        <Container>
             <StyledVideo muted ref={userVideo} autoPlay playsInline />
             {peers.map((peer, index) => {
                 return (
                     <Video key={index} peer={peer} />
                 );
             })}
-          </Container>
-        </div>
-      </div>
+        </Container>
     );
-  }
-  
+};
 
-//setInterval(Room,5);
-
-  export default Room;
+export default Room;
