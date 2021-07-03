@@ -20,13 +20,11 @@ const StyledVideo = styled.video`
 
 const Video = (props) => {
     const ref = useRef();
-    
     useEffect(() => {
         props.peer.on("stream", stream => {
             ref.current.srcObject = stream;
         })
     }, []);
-    
     return (
         <StyledVideo playsInline autoPlay ref={ref} />
     );
@@ -154,7 +152,4 @@ function Room(props) {
     );
   }
   
-
-//setInterval(Room,5);
-
   export default Room;
