@@ -70,6 +70,7 @@ NAME LIST TO UPDATE:
 
 1- Quielo
 
+<<<<<<< HEAD
 2- Charly
 
 3- Moni
@@ -111,3 +112,10 @@ the "develop" branch.
     QA branch is our code battleground
 
 ]
+=======
+2-
+
+3-
+
+4-
+>>>>>>> develop
