@@ -165,7 +165,7 @@ function Room(props) {
           <button id="buttonOk" onClick={handleSecondModalClose} className={styles.okButton}>
             OK!
           </button>
-         </div>
+        </div>
           <div className={styles.roomcontainer}>
             <div className={styles.roomname}>
               <p useRef="name_room" contentEditable={true} >{roomName}</p>
