@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import styled from "styled-components";
-//import e from 'cors';
 
 const Container = styled.div`
     display: flex;
@@ -44,6 +43,7 @@ function Room(props) {
   const userVideo = useRef();
   const peersRef = useRef([]);
   const roomID = props.match.params.roomID;
+  console.log(roomID);
   var actualURL = window.location.href;
   const [showUrl, setShowUrl] = useState(true);
   const [showName, setShowName]  = useState(true);
@@ -63,7 +63,6 @@ function Room(props) {
   const handleSecondModalClose = () => {
     setShowName(false);
   }
- 
 
   useEffect(() => {
       //io('http://localhost:8000/');
@@ -133,6 +132,7 @@ function Room(props) {
 
   return (
     <div className={[styles.room, (showUrl || showName ? styles.modalBG : "")].filter(Boolean).join(" ")}>
+      
         <div className={styles.linkPopUp} hidden={!showUrl}>
           <h3 className={styles.permission}>Permissions</h3>
           <div className={styles.close} onClick={handleModalClose}></div>
@@ -168,7 +168,7 @@ function Room(props) {
          </div>
           <div className={styles.roomcontainer}>
             <div className={styles.roomname}>
-              <p contentEditable="true" onChange={() => setroomName(roomName)}>{roomName}</p>
+              <p useRef="name_room" contentEditable={true} >{roomName}</p>
             </div>
             <div className={styles.logodown}></div>
             <div className={styles.link} onClick={handleModalOpen}></div>
