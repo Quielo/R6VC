@@ -5,17 +5,17 @@ import Peer from "simple-peer";
 import styled from "styled-components";
 
 const Container = styled.div`
-    padding: 20px;
     display: flex;
-    height: 100vh;
+    height: 90%;
     width: 90%;
-    margin: auto;
+    margin: 2%;
     flex-wrap: wrap;
 `;
 
 const StyledVideo = styled.video`
-    height: 40%;
-    width: 50%;
+    margin: 40px 50px;
+    height: 35%;
+    width: 40%;
 `;
 
 const Video = (props) => {
@@ -25,13 +25,12 @@ const Video = (props) => {
         props.peer.on("stream", stream => {
             ref.current.srcObject = stream;
         })
-    }, []);
+    }, [props.peer]);
 
     return (
-        <StyledVideo playsInline autoPlay ref={ref} />
+        <StyledVideo playsInline autoPlay muted controls ref={ref} />
     );
 }
-
 
 const videoConstraints = {
     height: window.innerHeight / 2,
@@ -40,130 +39,121 @@ const videoConstraints = {
 
 function Room(props) {
   const [peers, setPeers] = useState([]);
-    const socketRef = useRef();
-    const userVideo = useRef();
-    const peersRef = useRef([]);
-    const roomID = props.match.params.roomID;
+  const socketRef = useRef();
+  const userVideo = useRef();
+  const peersRef = useRef([]);
+  const roomID = props.match.params.roomID;
+  var actualURL = window.location.href;
+  const [showUrl, setShowUrl] = useState(true);
+  const [showName, setShowName]  = useState(true);
+  const [roomName, setroomName] = useState('ROOM NAME');
 
-    useEffect(() => {
-        io('http://localhost:8000/');
-        socketRef.current = io.connect("/");
-        navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
-            userVideo.current.srcObject = stream;
-            socketRef.current.emit("join room", roomID);
-            socketRef.current.on("all users", users => {
-                const peers = [];
-                users.forEach(userID => {
-                    const peer = createPeer(userID, socketRef.current.id, stream);
-                    peersRef.current.push({
-                        peerID: userID,
-                        peer,
-                    })
-                    peers.push(peer);
-                })
-                setPeers(peers);
-            })
+  function logOut() {
+    props.history.push("/back-soon");
+    window.location.reload(true);
+  }
 
-            socketRef.current.on("user joined", payload => {
-                const peer = addPeer(payload.signal, payload.callerID, stream);
-                peersRef.current.push({
-                    peerID: payload.callerID,
-                    peer,
-                })
+  const handleModalClose = () => {
+    setShowUrl(false);
+  }
+  const handleModalOpen = () => {
+    setShowUrl(true);
+  }
+  const handleSecondModalClose = () => {
+    setShowName(false);
+  }
+ 
 
-                setPeers(users => [...users, peer]);
-            });
+  useEffect(() => {
+      //io('http://localhost:8000/');
+      socketRef.current = io.connect("/");
+      navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
+          userVideo.current.srcObject = stream;
+          socketRef.current.emit("join room", roomID);
+          socketRef.current.on("all users", users => {
+              const peers = [];
+              users.forEach(userID => {
+                  const peer = createPeer(userID, socketRef.current.id, stream);
+                  peersRef.current.push({
+                      peerID: userID,
+                      peer,
+                  })
+                  peers.push(peer);
+              })
+              setPeers(peers);
+          })
 
-            socketRef.current.on("receiving returned signal", payload => {
-                const item = peersRef.current.find(p => p.peerID === payload.id);
-                item.peer.signal(payload.signal);
-            });
-        })
-    }, []);
+          socketRef.current.on("user joined", payload => {
+              const peer = addPeer(payload.signal, payload.callerID, stream);
+              peersRef.current.push({
+                  peerID: payload.callerID,
+                  peer,
+              })
 
-    function createPeer(userToSignal, callerID, stream) {
-        const peer = new Peer({
-            initiator: true,
-            trickle: false,
-            stream,
-        });
+              setPeers(users => [...users, peer]);
+          });
 
-        peer.on("signal", signal => {
-            socketRef.current.emit("sending signal", { userToSignal, callerID, signal })
-        })
+          socketRef.current.on("receiving returned signal", payload => {
+              const item = peersRef.current.find(p => p.peerID === payload.id);
+              item.peer.signal(payload.signal);
+          });
+      })
+  }, [roomID]);
 
-        return peer;
-    }
+  function createPeer(userToSignal, callerID, stream) {
+      const peer = new Peer({
+          initiator: true,
+          trickle: false,
+          stream,
+      });
 
-    function addPeer(incomingSignal, callerID, stream) {
-        const peer = new Peer({
-            initiator: false,
-            trickle: false,
-            stream,
-        })
+      peer.on("signal", signal => {
+          socketRef.current.emit("sending signal", { userToSignal, callerID, signal })
+      })
 
-        peer.on("signal", signal => {
-            socketRef.current.emit("returning signal", { signal, callerID })
-        })
+      return peer;
+  }
 
-        peer.signal(incomingSignal);
+  function addPeer(incomingSignal, callerID, stream) {
+      const peer = new Peer({
+          initiator: false,
+          trickle: false,
+          stream,
+      })
 
-        return peer;
-    }
+      peer.on("signal", signal => {
+          socketRef.current.emit("returning signal", { signal, callerID })
+      })
 
-    return (
-      <div className={styles.room}>
-        <div className={styles.linkPopUp}>
-        <h3 className={styles.permission}>Permissions</h3>
-        <p className={styles.instructions}>
-          Edit the name of the room related to the topic of the meeting.<br/> As you
-          wish! Share the code with your guests.<br/>And the meeting is ready!
-        </p>
-        <div className={styles.urlContainer}>
-          <h3 className={styles.url}>_____Url_here!_____</h3>
-          <div className={styles.copyIcon}></div>
-        </div>
-      </div>
-      <div className={styles.room}></div>
-        {/*<div className={styles.welcomecontainer}>
-          <p className={styles.welcomemessage}>
-            {" "}
-            Welcome!
-            <br />
-            <span className={styles.enterName}>
-              Enter your name o nickname to start!
-              <span />
-            </span>{" "}
-            <br />
-            <br />
-            <br />
-            <br />
-            <input type="text" className={styles.inputNickname}></input>
+      peer.signal(incomingSignal);
+
+      return peer;
+  }
+
+  return (
+    <div className={[styles.room, (showUrl || showName ? styles.modalBG : "")].filter(Boolean).join(" ")}>
+        <div className={styles.linkPopUp} hidden={!showUrl}>
+          <h3 className={styles.permission}>Permissions</h3>
+          <div className={styles.close} onClick={handleModalClose}></div>
+          <p className={styles.instructions}>
+            <mark>Edit the name of the room. As you wish!</mark><br/>
+            Share the code with your guests.<br/>
+            And your meeting is ready!
           </p>
-          <button id="buttonOk" className={styles.okButton}>
-            OK!
-          </button>
-    </div>*/}
-  
+          <div className={styles.urlContainer}>
+            <h3 className={styles.url}>{actualURL}</h3>
+            {document.queryCommandSupported('copy') && 
+            <div className={styles.copyIcon} onClick={() => navigator.clipboard.writeText(actualURL)}></div>}
+          </div>
+        </div>
+        <div className={styles.welcomecontainer} hidden={!showName}>
         <div className={styles.roomcontainer}>
           <div className={styles.roomname}>
             <p>ROOM NAME</p>
+
           </div>
-          <div className={styles.logodown}></div>
-          <div className={styles.mic}></div>
-          <div className={styles.arrow}></div>
-          <div className={styles.userslist}></div>
-          <Container>
-            <StyledVideo muted ref={userVideo} autoPlay playsInline />
-            {peers.map((peer, index) => {
-                return (
-                    <Video key={index} peer={peer} />
-                );
-            })}
-          </Container>
-        </div>
-      </div>
-    );
-  }
-  
-  export default Room;
+    </div>
+  );
+}
+
+export default Room;
