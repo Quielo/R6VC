@@ -43,10 +43,11 @@ function Room(props) {
   const userVideo = useRef();
   const peersRef = useRef([]);
   const roomID = props.match.params.roomID;
-  console.log(roomID);
   var actualURL = window.location.href;
   const [showUrl, setShowUrl] = useState(true);
   const [showName, setShowName]  = useState(true);
+  const inputRef = useRef(null);
+  const [inputVisible, setInputVisible] = useState(false);
   const [roomName, setroomName] = useState('ROOM NAME');
 
   function logOut() {
@@ -63,6 +64,21 @@ function Room(props) {
   const handleSecondModalClose = () => {
     setShowName(false);
   }
+
+  const onClickOutSide = (e) => {
+    if (inputRef.current && !inputRef.current.contains(e.target)) {
+      setInputVisible(false);
+    }
+  }
+
+  useEffect(() => {
+    if (inputVisible) {
+      document.addEventListener("mousedown", onClickOutSide);
+    }
+    return () => {
+      document.removeEventListener("mousedown", onClickOutSide);
+    };
+  });
 
   useEffect(() => {
       //io('http://localhost:8000/');
@@ -165,10 +181,20 @@ function Room(props) {
           <button id="buttonOk" onClick={handleSecondModalClose} className={styles.okButton}>
             OK!
           </button>
-         </div>
+        </div>
           <div className={styles.roomcontainer}>
             <div className={styles.roomname}>
-              <p useRef="name_room" contentEditable={true} >{roomName}</p>
+            {inputVisible ? (
+              <input
+                ref={inputRef}
+                value={roomName}
+                onChange={e => {
+                  setroomName(e.target.value);
+                }}
+              />
+            ) : (
+              <span onClick={() => setInputVisible(true)}>{roomName}</span>
+            )}
             </div>
             <div className={styles.logodown}></div>
             <div className={styles.link} onClick={handleModalOpen}></div>
