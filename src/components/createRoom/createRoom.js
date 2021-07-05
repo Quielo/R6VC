@@ -23,7 +23,7 @@ const Meeting = (props) => {
             {/*Checkbox*/}
             <input type="checkbox" name="switch_button" id="switch_label" onClick={turnOff} className={styles.switch_button__checkbox} />
             {/*switch*/}
-            <label for="switch_label" className={styles.switch_button__label}>
+            <label htmlFor="switch_label" className={styles.switch_button__label}>
             </label>
             </div>
           </div>
@@ -42,7 +42,7 @@ const Meeting = (props) => {
           NEW MEETING
         </div>
         <input type="text" placeholder="Enter your URL" className={styles.link_input} onChange={(link) => seturlLink(link.target.value)}/>
-        <div join={true} exat path={"/"} onClick={() => window.location = urlLink}  className={styles.join}>Join!</div>
+        <div path={"/"} onClick={() => window.location = urlLink}  className={styles.join}>Join!</div>
       </div>
     </div>
     </div>
