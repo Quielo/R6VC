@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Landing from './components/landing/landing';
 import Meeting from "./components/createRoom/createRoom";
 import Room from "./components/room/room";
+import Users from './components/userList/users';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Switch>
         <Route path="/" exact component={Meeting} />
         <Route path="/room/:roomID" component={Room} />
+        <Users></Users>
         <Route path="/back-soon" exact component={Landing} />
       </Switch>
     </BrowserRouter>
