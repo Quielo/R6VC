@@ -72,11 +72,9 @@ NAME LIST TO UPDATE:
 
 2- Charly
 
-3-
+3- Fausto
 
 4-
-
-5-
 
 \*\*Also everything should be update, but in case it doesn't, write down:
 
