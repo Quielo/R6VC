@@ -7,6 +7,8 @@ const socket = require("socket.io");
 const io = socket(server);
 
 const users = {};
+const usersName = [];
+const rooms = {};
 
 const socketToRoom = {};
 
@@ -27,8 +29,26 @@ io.on('connection', socket => {
         socket.emit("all users", usersInThisRoom);
     });
 
+    socket.on("get room name", roomId => {
+        socket.emit("room name", rooms[roomId] || 'New Room')
+    })
+
+    socket.on("set room name", (roomDetails) => {
+        const {roomID, roomName} = {roomDetails};
+        rooms[roomID] = roomName
+        socket.broadcast.emit("room name", rooms[roomId] || 'New Room')
+    })
+
+    socket.on("join name", userName => {
+        usersName.push(userName)
+        console.log(usersName)
+        socket.emit("get names", usersName)
+        socket.broadcast.emit("get names", usersName)
+    })
+
     socket.on("sending signal", payload => {
         io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload.callerID });
+        // socket.broadcast.emit("user joined", { signal: payload.signal, callerID: payload.callerID })
     });
 
     socket.on("returning signal", payload => {

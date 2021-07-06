@@ -39,6 +39,7 @@ const videoConstraints = {
 
 function Room(props) {
   const [peers, setPeers] = useState([]);
+  const [userNames, setuserNames] = useState([]);
   const socketRef = useRef();
   const userVideo = useRef();
   const peersRef = useRef([]);
@@ -79,6 +80,7 @@ function Room(props) {
     setShowUrl(true);
   }
   const handleSecondModalClose = () => {
+    socketRef.current.emit("join name", userName)
     setShowName(false);
   }
 
@@ -103,6 +105,10 @@ function Room(props) {
       navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
           userVideo.current.srcObject = stream;
           socketRef.current.emit("join room", roomID);
+          socketRef.current.emit("get room name", roomID);
+          socketRef.current.on("room name", roomName => {
+            setroomName(roomName)
+          })
           socketRef.current.on("all users", users => {
               const peers = [];
               users.forEach(userID => {
@@ -130,6 +136,10 @@ function Room(props) {
               const item = peersRef.current.find(p => p.peerID === payload.id);
               item.peer.signal(payload.signal);
           });
+
+          socketRef.current.on("get names", usersName => {
+            setuserNames(usersName)
+          })
       })
   }, [roomID]);
 
@@ -214,6 +224,7 @@ function Room(props) {
                 ref={inputRef}
                 value={roomName}
                 onChange={e => {
+                  socketRef.current.emit("set room name", {roomID: roomID, roomName: e.target.value })
                   setroomName(e.target.value);
                 }}
               />
@@ -224,11 +235,14 @@ function Room(props) {
             <div className={styles.logodown}></div>
             <div className={styles.link} onClick={handleModalOpen}></div>
             <div className={styles.arrow} onClick={logOut}></div>
-            <div className={styles.userslist} onClick={NameList}></div>
+            <div className={styles.userslist} onClick={NameList}>
+              {userNames.map(username => <p>{username}</p>)}
+            </div>
             {/* <div className={styles.userslist}></div> */}
             <Container>
               <StyledVideo muted controls autoPlay playsInline ref={userVideo} className={styles.host}/>
               {peers.map((peer, index) => {
+                  console.log(peers)
                   return (
                       <Video muted controls playsInline playsInline key={index} peer={peer} />
                   );
