@@ -46,6 +46,8 @@ function Room(props) {
   var actualURL = window.location.href;
   const [showUrl, setShowUrl] = useState(true);
   const [showName, setShowName]  = useState(true);
+  const inputRef = useRef(null);
+  const [inputVisible, setInputVisible] = useState(false);
   const [roomName, setroomName] = useState('ROOM NAME');
 
   function logOut() {
@@ -62,7 +64,21 @@ function Room(props) {
   const handleSecondModalClose = () => {
     setShowName(false);
   }
- 
+
+  const onClickOutSide = (e) => {
+    if (inputRef.current && !inputRef.current.contains(e.target)) {
+      setInputVisible(false);
+    }
+  }
+
+  useEffect(() => {
+    if (inputVisible) {
+      document.addEventListener("mousedown", onClickOutSide);
+    }
+    return () => {
+      document.removeEventListener("mousedown", onClickOutSide);
+    };
+  });
 
   useEffect(() => {
       //io('http://localhost:8000/');
@@ -132,6 +148,7 @@ function Room(props) {
 
   return (
     <div className={[styles.room, (showUrl || showName ? styles.modalBG : "")].filter(Boolean).join(" ")}>
+      
         <div className={styles.linkPopUp} hidden={!showUrl}>
           <h3 className={styles.permission}>Permissions</h3>
           <div className={styles.close} onClick={handleModalClose}></div>
@@ -147,10 +164,50 @@ function Room(props) {
           </div>
         </div>
         <div className={styles.welcomecontainer} hidden={!showName}>
-        <div className={styles.roomcontainer}>
-          <div className={styles.roomname}>
-            <p>ROOM NAME</p>
-
+          <p className={styles.welcomemessage}>
+            {" "}
+            Welcome!
+            <br />
+            <span className={styles.enterName}>
+              Enter your name o nickname to start!
+              <span />
+            </span>{" "}
+            <br />
+            <br />
+            <br />
+            <br />
+            <input type="text" placeholder="Name" className={styles.inputNickname}></input>
+          </p>
+          <button id="buttonOk" onClick={handleSecondModalClose} className={styles.okButton}>
+            OK!
+          </button>
+        </div>
+          <div className={styles.roomcontainer}>
+            <div className={styles.roomname}>
+            {inputVisible ? (
+              <input
+                ref={inputRef}
+                value={roomName}
+                onChange={e => {
+                  setroomName(e.target.value);
+                }}
+              />
+            ) : (
+              <span onClick={() => setInputVisible(true)}>{roomName}</span>
+            )}
+            </div>
+            <div className={styles.logodown}></div>
+            <div className={styles.link} onClick={handleModalOpen}></div>
+            <div className={styles.arrow} onClick={logOut}></div>
+            <div className={styles.userslist}></div>
+            <Container>
+              <StyledVideo muted controls autoPlay playsInline ref={userVideo} className={styles.host}/>
+              {peers.map((peer, index) => {
+                  return (
+                      <Video muted controls playsInline playsInline key={index} peer={peer} />
+                  );
+              })}
+            </Container>
           </div>
     </div>
   );
