@@ -52,6 +52,8 @@ function Room(props) {
   const [roomName, setroomName] = useState('ROOM NAME');
   const [userName, setUserName] = useState("");
 
+  console.log("ROOM ID", roomID);
+
   let useNameLol = userName
   let names = []
   console.log(names)
@@ -85,8 +87,11 @@ function Room(props) {
   }
 
   const onClickOutSide = (e) => {
+    console.log("ROOM NAME", roomName)
+    console.log("ROOM ID on click outside", roomID)
     if (inputRef.current && !inputRef.current.contains(e.target)) {
       setInputVisible(false);
+      // console.log("HOLA")
     }
   }
 
@@ -107,6 +112,7 @@ function Room(props) {
           socketRef.current.emit("join room", roomID);
           socketRef.current.emit("get room name", roomID);
           socketRef.current.on("room name", roomName => {
+            console.log(roomName)
             setroomName(roomName)
           })
           socketRef.current.on("all users", users => {
@@ -224,7 +230,7 @@ function Room(props) {
                 ref={inputRef}
                 value={roomName}
                 onChange={e => {
-                  socketRef.current.emit("set room name", {roomID: roomID, roomName: e.target.value })
+                  socketRef.current.emit("set room name", {roomID: roomID, roomName: roomName })
                   setroomName(e.target.value);
                 }}
               />

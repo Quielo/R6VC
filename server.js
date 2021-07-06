@@ -30,20 +30,24 @@ io.on('connection', socket => {
     });
 
     socket.on("get room name", roomId => {
+        console.log("ROOMS DETAILED", roomId, rooms[roomId])
         socket.emit("room name", rooms[roomId] || 'New Room')
     })
 
     socket.on("set room name", (roomDetails) => {
-        const {roomID, roomName} = {roomDetails};
+        const {roomID, roomName} = roomDetails;
+        console.log(roomDetails);
         rooms[roomID] = roomName
-        socket.broadcast.emit("room name", rooms[roomId] || 'New Room')
+        // socket.emit("room name", roomName || 'New Room')
+        console.log(roomName, "THIS IS ROOM NAME", "SOMETHING WEIRD")
+        socket.broadcast.emit("room name", roomName || 'New Roomssssss')
     })
 
     socket.on("join name", userName => {
         usersName.push(userName)
         console.log(usersName)
         socket.emit("get names", usersName)
-        socket.broadcast.emit("get names", usersName)
+        socket.emit("get names", usersName)
     })
 
     socket.on("sending signal", payload => {
