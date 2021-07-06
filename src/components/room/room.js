@@ -49,6 +49,23 @@ function Room(props) {
   const inputRef = useRef(null);
   const [inputVisible, setInputVisible] = useState(false);
   const [roomName, setroomName] = useState('ROOM NAME');
+  const [userName, setUserName] = useState("");
+
+  let useNameLol = userName
+  let names = []
+  console.log(names)
+  names.push(useNameLol)
+
+  function NameList() {
+
+    return(
+    <div>
+        {
+            names.map((name, key) => <h2>{name}</h2>)
+        }
+    </div>
+);
+};
 
   function logOut() {
     props.history.push("/back-soon");
@@ -147,6 +164,7 @@ function Room(props) {
   }
 
   return (
+
     <div className={[styles.room, (showUrl || showName ? styles.modalBG : "")].filter(Boolean).join(" ")}>
       
         <div className={styles.linkPopUp} hidden={!showUrl}>
@@ -176,7 +194,14 @@ function Room(props) {
             <br />
             <br />
             <br />
-            <input type="text" placeholder="Name" className={styles.inputNickname}></input>
+            <input
+            type="text"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            placeholder="Name"
+            className={styles.inputNickname}
+          ></input>
+
           </p>
           <button id="buttonOk" onClick={handleSecondModalClose} className={styles.okButton}>
             OK!
@@ -199,7 +224,8 @@ function Room(props) {
             <div className={styles.logodown}></div>
             <div className={styles.link} onClick={handleModalOpen}></div>
             <div className={styles.arrow} onClick={logOut}></div>
-            <div className={styles.userslist}></div>
+            <div className={styles.userslist} onClick={NameList}></div>
+            {/* <div className={styles.userslist}></div> */}
             <Container>
               <StyledVideo muted controls autoPlay playsInline ref={userVideo} className={styles.host}/>
               {peers.map((peer, index) => {
