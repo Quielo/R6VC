@@ -91,6 +91,7 @@ function Room(props) {
     console.log("ROOM ID on click outside", roomID)
     if (inputRef.current && !inputRef.current.contains(e.target)) {
       setInputVisible(false);
+      socketRef.current.emit("set room name", {roomID: roomID, roomName: roomName })
       // console.log("HOLA")
     }
   }
